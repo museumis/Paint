@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,18 +23,17 @@ import javax.swing.border.Border;
 
 /**
  * 
- * @author Ismael Martin
+ * @author Ismael Martin Interfaz de Paint
  *
  */
 public class Interfaz {
-
-	private JFrame frame;
-	private JPanel navegacion, dibujo, caballete;
-	private JButton btnCuatrado, btnCirculo;
-	private JLabel textPosX, textPosY, separacion, lienzo;
-	private JTextField editFieldX, editFieldY;
 	private final File circulo = new File("circulo.gif");
 	private final File rectangulo = new File("rectangulo.gif");
+	private JFrame frame;
+	private JPanel navegacion, dibujo, caballete;
+	private JButton btnCuadrado, btnCirculo;
+	private JLabel textPosX, textPosY, separacion, lienzo;
+	private JTextField editFieldX, editFieldY;
 	private BufferedImage canvas = null;
 	private Image escala = null;
 	private ImageIcon icon;
@@ -54,50 +55,6 @@ public class Interfaz {
 		frame.setLayout(new GridBagLayout());
 		GridBagConstraints data;
 
-		// Panel de DIBUJO
-		data = new GridBagConstraints();
-		data.gridx = 1;
-		data.gridy = 0;
-		data.weightx = 1;
-		data.weighty = 1;
-		data.fill = GridBagConstraints.BOTH;
-		dibujo = new JPanel();
-		dibujo.setLayout(null);
-		dibujo.setBackground(Color.GRAY);
-		frame.getContentPane().add(dibujo, data);
-
-		// Panel de dibujo(Caballete)
-		caballete = new JPanel();
-		caballete.setLayout(new GridLayout(1, 1));
-		caballete.setBounds(50, 100, 400, 400);
-		caballete.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.BLACK));
-		dibujo.add(caballete);
-
-		// Lienzo
-		lienzo = new JLabel();
-		// canvas
-		try {
-			//POR AQUIIIIIIIIIII !!!! PON GRAFIS AQUI NO ES UNA IMAGEN,FONDO BLANCO
-			canvas = ImageIO.read(circulo);
-			escala = canvas.getScaledInstance(caballete.getWidth(), caballete.getHeight(),Image.SCALE_SMOOTH);
-		
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		icon = new ImageIcon(escala);
-		lienzo.setIcon(icon);
-		caballete.add(lienzo);			
-		
-		/*
-		BufferedImage buffer = new BufferedImage(caballete.getWidth(),caballete.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		Graphics graficos = buffer.getGraphics();
-		graficos.setColor(Color.BLUE);
-		graficos.fillRect(0,0, buffer.getWidth(),buffer.getHeight());		
-		graficos.dispose();
-		
-		*/
-			
-
 		// Panel de NAVEGACION
 		data = new GridBagConstraints();
 		data.gridx = 0;
@@ -112,7 +69,7 @@ public class Interfaz {
 		data = new GridBagConstraints();
 		data.gridx = 0;
 		data.gridy = 1;
-		data.fill = GridBagConstraints.BOTH;
+		data.insets = new Insets(10, 0, 0, 0);
 		btnCirculo = new JButton();
 		// Imagen del boton
 		try {
@@ -130,8 +87,7 @@ public class Interfaz {
 		data.gridx = 0;
 		data.gridy = 0;
 		data.insets = new Insets(10, 0, 0, 0);
-		data.fill = GridBagConstraints.BOTH;
-		btnCuatrado = new JButton();
+		btnCuadrado = new JButton();
 		// Imagen del boton
 		try {
 			canvas = ImageIO.read(rectangulo);
@@ -140,8 +96,8 @@ public class Interfaz {
 		}
 		escala = canvas.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
 		icon = new ImageIcon(escala);
-		btnCuatrado.setIcon(icon);
-		navegacion.add(btnCuatrado, data);
+		btnCuadrado.setIcon(icon);
+		navegacion.add(btnCuadrado, data);
 
 		// Separador
 		data = new GridBagConstraints();
@@ -168,7 +124,7 @@ public class Interfaz {
 		data.gridy = 4;
 		data.insets = new Insets(10, 0, 0, 0);
 		data.fill = GridBagConstraints.BOTH;
-		editFieldX = new JTextField();
+		editFieldX = new JTextField("10");
 		navegacion.add(editFieldX, data);
 
 		// Texto de la posicion y
@@ -177,8 +133,8 @@ public class Interfaz {
 		data.gridy = 5;
 		data.insets = new Insets(10, 0, 0, 0);
 		data.fill = GridBagConstraints.BOTH;
-		textPosX = new JLabel("Posicion Y");
-		navegacion.add(textPosX, data);
+		textPosY = new JLabel("Posicion Y");
+		navegacion.add(textPosY, data);
 
 		// Texto editable de la posicion Y
 		data = new GridBagConstraints();
@@ -186,11 +142,33 @@ public class Interfaz {
 		data.gridy = 6;
 		data.insets = new Insets(10, 0, 0, 0);
 		data.fill = GridBagConstraints.BOTH;
-		editFieldY = new JTextField();
+		editFieldY = new JTextField("10");
 		navegacion.add(editFieldY, data);
+
+		// Panel de DERECHO
+		// Panel dibujo
+		dibujo = new JPanel();
+		dibujo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		dibujo.setLayout(new GridLayout(1, 1));
+		data = new GridBagConstraints();
+		data.gridx = 1;
+		data.gridy = 0;
+		data.weightx = 1;
+		data.weighty = 1;
+		frame.add(dibujo, data);
+
+		// El lienzo
+		lienzo = new JLabel();
+		dibujo.add(lienzo);
+		canvas = new BufferedImage(400, 400, BufferedImage.TYPE_INT_ARGB);
+		lienzo.setIcon(new ImageIcon(canvas));
 
 	}
 
 	public void iniciarListened() {
+		// Escuchador boton circulo
+		btnCirculo.addActionListener(new EscuchadorBtnCirculo(editFieldX, editFieldY, canvas, lienzo));	
+		// Escuchador boton cuadrado
+		btnCuadrado.addActionListener(new EscuchadorBtnCuadrado(editFieldX, editFieldY, canvas, lienzo));		
 	}
 }
