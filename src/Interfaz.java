@@ -19,6 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+/**
+ * 
+ * @author Ismael Martin
+ *
+ */
 public class Interfaz {
 
 	private JFrame frame;
