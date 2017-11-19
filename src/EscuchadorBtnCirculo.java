@@ -17,12 +17,14 @@ public class EscuchadorBtnCirculo implements ActionListener {
 	JTextField editFieldX, editFieldY;
 	BufferedImage canvas;
 	JLabel lienzo;
+	int tamanio;
 
-	public EscuchadorBtnCirculo(JTextField editX, JTextField editY, BufferedImage c, JLabel l) {
+	public EscuchadorBtnCirculo(JTextField editX, JTextField editY, BufferedImage c, JLabel l,String tam) {
 		this.editFieldX = editX;
 		this.editFieldY = editY;
 		this.canvas = c;
 		this.lienzo = l;
+		tamanio = Integer.parseInt(tam);
 	}
 
 	@Override
@@ -40,8 +42,8 @@ public class EscuchadorBtnCirculo implements ActionListener {
 				// Introducir circulo
 				Graphics graficosCi;
 				graficosCi = canvas.getGraphics();
-				graficosCi.setColor(Color.BLUE);
-				graficosCi.fillOval(x, y, 25, 25);
+				//graficosCi.setColor(Interfaz.colorDibujo);
+				graficosCi.fillOval(x, y, tamanio, tamanio);
 				graficosCi.dispose();
 				lienzo.repaint();
 			}

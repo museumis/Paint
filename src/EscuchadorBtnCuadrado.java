@@ -16,8 +16,9 @@ public class EscuchadorBtnCuadrado implements ActionListener {
 	JTextField editFieldX, editFieldY;
 	BufferedImage canvas;
 	JLabel lienzo;
+	int tamanio;
 
-	public EscuchadorBtnCuadrado(JTextField editX, JTextField editY, BufferedImage c, JLabel l) {
+	public EscuchadorBtnCuadrado(JTextField editX, JTextField editY, BufferedImage c, JLabel l,String tam) {
 		this.editFieldX = editX;
 		this.editFieldY = editY;
 		this.canvas = c;
@@ -39,8 +40,8 @@ public class EscuchadorBtnCuadrado implements ActionListener {
 				// Introducir cuadrado
 				Graphics graficosCu;
 				graficosCu = canvas.getGraphics();
-				graficosCu.setColor(Color.RED);
-				graficosCu.fillRect(x, y, 90, 90);
+				//graficosCu.setColor(Interfaz.colorDibujo);
+				graficosCu.fillRect(x, y, tamanio,tamanio);
 				graficosCu.dispose();
 				lienzo.repaint();
 			}
