@@ -9,6 +9,7 @@ import java.awt.Insets;
 import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -37,7 +38,7 @@ import org.omg.CORBA.portable.ValueBase;
  * 
  * @author Ismael Martín Ramírez
  *
- * https://github.com/museumis
+ *         https://github.com/museumis
  *
  */
 public class Interfaz {
@@ -53,8 +54,8 @@ public class Interfaz {
 	private ImageIcon icon;
 	private Color colorDibujo = Color.BLUE;
 	private int tamanioFigura = 100;
-	private int ratonX, ratonY, preRatonX, preRatonY;
-	private int grafico = 0;//0-circulo,1-cuadrado,2-línea
+	private int ratonX, ratonY, preRatonX=-1, preRatonY=-1;
+	private int grafico = 0;// 0-circulo,1-cuadrado,2-línea
 
 	// Boton para obtener el color.
 	private JButton btnPicker_G1I;
@@ -287,7 +288,8 @@ public class Interfaz {
 		});
 
 		/**
-		 * Método que abre un frame y muesta el color del pixel en el que se cliquea( _G1I)
+		 * Método que abre un frame y muesta el color del pixel en el que se cliquea(
+		 * _G1I)
 		 */
 		btnPicker_G1I.addActionListener(new ActionListener() {
 			@Override
@@ -303,9 +305,9 @@ public class Interfaz {
 				// Panel de formato de colores
 				// Panel RGB
 				JPanel panelRGB_G1I = new JPanel();
-				panelRGB_G1I.setLayout(new GridLayout(1,1));
+				panelRGB_G1I.setLayout(new GridLayout(1, 1));
 				panelRGB_G1I.setBorder(BorderFactory.createTitledBorder("RGB"));
-				//Edit text RGB
+				// Edit text RGB
 				JTextField editRgb_G1I = new JTextField();
 				editRgb_G1I.setHorizontalAlignment(0);
 				panelRGB_G1I.add(editRgb_G1I);
@@ -327,17 +329,17 @@ public class Interfaz {
 							// RGB
 							String colorRgb_G1I = color_G1I.toString();
 							// Formateo color
-							colorRgb_G1I=colorRgb_G1I.substring(colorRgb_G1I.indexOf("["), colorRgb_G1I.length());
+							colorRgb_G1I = colorRgb_G1I.substring(colorRgb_G1I.indexOf("["), colorRgb_G1I.length());
 							// Mostar
 							editRgb_G1I.setText(colorRgb_G1I);
-							
-							//HSB
-							float valor = 0.9f; 
+
+							// HSB
+							float valor = 0.9f;
 							float saturacion_G1I = 1.0f;
 							float matriz = 0.8f;
 							Color colorHSB_G1I = color_G1I.getHSBColor(valor, saturacion_G1I, matriz);
-							System.out.println(colorHSB_G1I.toString());
-							
+//							System.out.println(colorHSB_G1I.toString());
+
 							// Excepciones
 						} catch (AWTException e1_G1I) {
 							System.out.println("Ocurrió un error");// e1_G1I.printStackTrace();
@@ -364,34 +366,14 @@ public class Interfaz {
 		// ******************************
 		// Evento del ratón
 		// ******************************
-
-		lienzo.addMouseListener(new MouseListener() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-			}
-
+		
+		lienzo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// preRatonX = ratonX;
-				// preRatonY = ratonY;
-				ratonX = e.getX();
-				ratonY = e.getY();
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
+				preRatonX= e.getX();
+				preRatonY = e.getY();
 			}
 		});
-
 		lienzo.addMouseMotionListener(new MouseMotionListener() {
 			@Override
 			public void mouseMoved(MouseEvent e) {// TODO Auto-generated method stub
@@ -401,13 +383,18 @@ public class Interfaz {
 			public void mouseDragged(MouseEvent e) {
 				ratonX = e.getX();
 				ratonY = e.getY();
-				preRatonX = ratonX;
-				preRatonY = ratonY;
+				if (preRatonX == -1) {
+					preRatonX = ratonX;
+				}
+				if (preRatonY == -1) {
+					preRatonY = ratonY;
+				}
+				
+
 				editFieldX.setText(String.valueOf(ratonX));
 				editFieldY.setText(String.valueOf(ratonY));
 				switch (grafico) {
 				case 0: {
-					// Introducir circulo
 					try {
 						// Coordenadas seleccionadas
 						int x = Integer.parseInt(editFieldX.getText());
@@ -470,21 +457,23 @@ public class Interfaz {
 				}
 
 				case 2: {
-					// Introducir cuadrado
+					// Introducir linea
 					Graphics graficosLi;
 					graficosLi = canvas.getGraphics();
 					graficosLi.setColor(colorDibujo);
 					graficosLi.drawLine(preRatonX, preRatonY, e.getX(), e.getY());
 					graficosLi.dispose();
+					preRatonX = e.getX();
+					preRatonY = e.getY();
 					lienzo.repaint();
+					
 					grafico = 2;
 					break;
 				}
 				default:
 					break;
 				}
-				preRatonX = ratonX;
-				preRatonY = ratonY;
+			
 			}
 
 		});
